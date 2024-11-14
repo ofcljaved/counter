@@ -8,6 +8,8 @@ describe("counter", () => {
 
   const program = anchor.workspace.Counter as Program<Counter>;
 
+  const counterAccount = new anchor.web3.Keypair();
+
   it("Is initialized!", async () => {
     // Add your test here.
     const tx = await program.methods.initialize().rpc();
