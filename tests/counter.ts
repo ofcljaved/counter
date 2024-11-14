@@ -12,7 +12,33 @@ describe("counter", () => {
 
   it("Is initialized!", async () => {
     // Add your test here.
-    const tx = await program.methods.initialize().rpc();
+    const tx = await program.methods
+      .initialize()
+      .accounts({
+        counter: counterAccount.publicKey,
+      })
+      .signers([counterAccount])
+      .rpc({ skipPreflight: true });
+
+    const accountData = await program.account.counter.fetch(
+      counterAccount.publicKey
+    );
     console.log("Your transaction signature", tx);
+    console.log("Count:", accountData.count);
+  });
+
+  it("Increment!", async () => {
+    const tx = await program.methods
+      .increment()
+      .accounts({
+        counter: counterAccount.publicKey,
+      })
+      .rpc();
+
+    const accountData = await program.account.counter.fetch(
+      counterAccount.publicKey
+    );
+    console.log("Your transaction signature", tx);
+    console.log("Count:", accountData.count);
   });
 });
