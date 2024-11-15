@@ -4,7 +4,9 @@ import { Counter } from "../target/types/counter";
 
 describe("counter", () => {
   // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.AnchorProvider.env());
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+  const payer = provider.wallet as anchor.Wallet;
 
   const program = anchor.workspace.Counter as Program<Counter>;
 
@@ -16,6 +18,7 @@ describe("counter", () => {
       .initialize()
       .accounts({
         counter: counterAccount.publicKey,
+        user: payer.publicKey,
       })
       .signers([counterAccount])
       .rpc({ skipPreflight: true });
